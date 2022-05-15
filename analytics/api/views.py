@@ -7,4 +7,4 @@ from services.analytics import Analytics
 class AnalysisViewSet(APIView):
     def get(self, request):
         analytics = Analytics()
-        return Response({'msg': 'Hello world'}, status=status.HTTP_200_OK)
+        return Response(analytics.response, status=status.HTTP_200_OK)

@@ -21,7 +21,6 @@ class Analytics:
         self.relevant_key_words_from_title, self.relevant_key_words_from_description = \
             self.get_relevant_key_words_from_title_and_description()
         self.response = self.to_json()
-        print(self.response)
 
     def get_coupons_df(self) -> pd.DataFrame:
         coupons = pd.read_json(f"{self.path}/.data/coupons.json")
