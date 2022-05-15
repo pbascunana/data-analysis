@@ -20,13 +20,15 @@ class Analytics:
             self.get_min_mean_and_max_discounts_by_retailer('dollar-off')
         self.relevant_key_words_from_title, self.relevant_key_words_from_description = \
             self.get_relevant_key_words_from_title_and_description()
+        self.response = self.to_json()
+        print(self.response)
 
     def get_coupons_df(self) -> pd.DataFrame:
         coupons = pd.read_json(f"{self.path}/.data/coupons.json")
         return coupons['coupons'].apply(pd.Series)
 
-    def get_number_of_coupon_types(self) -> pd.Series:
-        return self.coupons['promotion_type'].value_counts()
+    def get_number_of_coupon_types(self) -> Dict:
+        return self.coupons['promotion_type'].value_counts().to_dict()
 
     def get_min_mean_and_max_discounts(self, discount_key: str) -> Tuple[int, int, int]:
         min_value = self.get_values_of_min_discounts(self.coupons, discount_key)
@@ -70,3 +72,36 @@ class Analytics:
 
     def get_group_by(self, keys: List, frame_name: str) -> pd.DataFrame:
         return self.coupons.groupby(keys).size().to_frame(name=frame_name).reset_index()
+
+    def to_json(self) -> Dict:
+        return {
+            'numberOfCouponsByType': self.types_count,
+            'percentOffDiscounts': {
+                'min': self.percent_off_min,
+                'mean': self.percent_off_mean,
+                'max': self.percent_off_max,
+                'unit': '%'
+            },
+            'dollarOffDiscounts': {
+                'min': self.dollar_off_min,
+                'mean': self.dollar_off_mean,
+                'max': self.dollar_off_max,
+                'unit': '$'
+            },
+            'percentOffDiscountsByRetail': {
+                'min': self.percent_off_min_by_retailer,
+                'mean': self.percent_off_mean_by_retailer,
+                'max': self.percent_off_max_by_retailer,
+                'unit': '%'
+            },
+            'dollarOffDiscountsByRetail': {
+                'min': self.dollar_off_min_by_retailer,
+                'mean': self.dollar_off_mean_by_retailer,
+                'max': self.dollar_off_max_by_retailer,
+                'unit': '$'
+            },
+            'relevantWords': {
+                'inTitle': self.relevant_key_words_from_title,
+                'inDescription': self.relevant_key_words_from_description
+            }
+        }
