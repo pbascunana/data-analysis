@@ -1,13 +1,31 @@
 import pandas as pd
 
-from django.conf import settings
 from typing import Dict, List, Tuple
 
 
 class Analytics:
 
-    def __init__(self):
-        self.path = settings.BASE_DIR.parent
+    def __init__(self, path):
+        self.path = path
+        self.coupons = None
+        self.types_count = None
+        self.percent_off_min = None
+        self.percent_off_mean = None
+        self.percent_off_max = None
+        self.dollar_off_min = None
+        self.dollar_off_mean = None
+        self.dollar_off_max = None
+        self.percent_off_min_by_retailer = None
+        self.percent_off_mean_by_retailer = None
+        self.percent_off_max_by_retailer = None
+        self.dollar_off_min_by_retailer = None
+        self.dollar_off_mean_by_retailer = None
+        self.dollar_off_max_by_retailer = None
+        self.relevant_key_words_from_title = None
+        self.relevant_key_words_from_description = None
+        self.response = None
+
+    def calculate(self):
         self.coupons = self.get_coupons_df()
         self.types_count = self.get_number_of_coupon_types()
         self.percent_off_min, self.percent_off_mean, self.percent_off_max = \
